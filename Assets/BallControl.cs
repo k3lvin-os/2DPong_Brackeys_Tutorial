@@ -19,11 +19,17 @@ public class BallControl : MonoBehaviour {
         }
     }
 	
-    void OnCollisionEnter(Collision col)
+    void OnCollisionEnter2D(Collision2D col)
     {
-        if(col.collider.CompareTag("Player"))
+        if(col.collider.tag == "Player")
         {
-            Debug.Log("It's working");
+            float yVelocityBall = gameObject.GetComponent<Rigidbody2D>().velocity.y;
+            float yVelocityPlayer = col.gameObject.GetComponent<Rigidbody2D>().velocity.y;
+            float newYVelocity = (yVelocityBall + yVelocityPlayer) / 2;
+
+            gameObject.GetComponent<Rigidbody2D>().velocity =
+                new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x,
+                newYVelocity);
         }
     }
 }
