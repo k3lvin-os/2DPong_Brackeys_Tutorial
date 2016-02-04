@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
+using MyEnumerations;
 
-public class ScoreManager : MonoBehaviour {
+public class ScoreManager : MonoBehaviour
+{
 
     public static int playerOneScore = 0;
     public static int playerTwoScore = 0;
@@ -18,8 +22,40 @@ public class ScoreManager : MonoBehaviour {
             playerTwoScore++;
         }
 
-        Debug.Log("Player1 score is " + playerOneScore);
-        Debug.Log("Player2 score is " + playerTwoScore);
+        /*  if (playerTwoScore == 10 || playerOneScore == 10)
+          {
+              GameObject winText = GameObject.FindGameObjectWithTag("VictoryText");
+
+              if (playerOneScore == 10)
+              {
+                  winText.GetComponent<Text>().text = "Player1 WINS";
+              }
+              else if (playerTwoScore == 10)
+              {
+                  winText.GetComponent<Text>().text = "Player2 WINS";
+              }
+
+              throw new NotImplementedException("Implement the game play again behaviour"); 
+          }
+          */
+    }
+
+    public static Player IsGameOver()
+    {
+        if (playerOneScore == 10)
+        {
+            return Player.Player1;
+        }
+
+        else if (playerTwoScore == 10)
+        {
+            return Player.Player2;
+        }
+
+        else
+        {
+            return Player.NotAPlayer;
+        }
     }
 
     void OnGUI()
