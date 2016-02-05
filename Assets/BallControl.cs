@@ -6,22 +6,24 @@ public class BallControl : MonoBehaviour
 
     public float XForce, YForce;
     public GameObject ball;
+    public bool FlagResetBall { get; set; }
 
     void Start()
     {
         Invoke("GoBall", 2.0f);
     }
 
-    
-    /* Antoher way to wait and so lunch the ball
-    IEnumerator Start()
+    void Update()
     {
-        yield return new WaitForSeconds(2);
-        GoBall();
+        if(FlagResetBall)
+        {
+            resetBall();
+            FlagResetBall = false;
+        }
     }
-    */
+    
 
-    public void ResetBall()
+    private void resetBall()
     {
         ball.transform.position = new Vector3(0f, 0f, 0f);
         ball.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
@@ -32,7 +34,7 @@ public class BallControl : MonoBehaviour
 
     void GoBall()
     {
-        float randNumber = Random.Range(0f, 1f);
+        float randNumber = Random.Range(0f, 2f);
         if (randNumber <= 0.5f)
         {
             gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(XForce, YForce));
@@ -55,15 +57,7 @@ public class BallControl : MonoBehaviour
                 new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x,
                 newYVelocity);
         }
-
-
     }
 
-    void OnCollisionOut2D(Collision2D col)
-    {
-        if(col.collider.CompareTag("SideWalls"))
-        {
-            ResetBall();
-        }
-    }
+
 }
