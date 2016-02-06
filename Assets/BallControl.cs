@@ -11,7 +11,7 @@ public class BallControl : MonoBehaviour
 
     void Start()
     {
-        GoBall(Const.WAIT_TIME);
+        GoBall(Const.BALL_SHOT_WAIT_TIME);
     }
 
     private IEnumerator WaitAndGoBall(float waitTime)
@@ -33,7 +33,7 @@ public class BallControl : MonoBehaviour
 
     public void GoBall()
     {
-        float randNumber = Random.Range(0f, 2f);
+        float randNumber = Random.Range(0f, 1f);
         if (randNumber <= 0.5f)
         {
             gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(XForce, YForce));
@@ -50,11 +50,15 @@ public class BallControl : MonoBehaviour
         {
             float yVelocityBall = gameObject.GetComponent<Rigidbody2D>().velocity.y;
             float yVelocityPlayer = col.gameObject.GetComponent<Rigidbody2D>().velocity.y;
-            float newYVelocity = (yVelocityBall + yVelocityPlayer) / 2;
+            float newYVelocity = (yVelocityBall + yVelocityPlayer) / 2  + Random.Range(0f, 5f);
+            float newXVelocity = gameObject.GetComponent<Rigidbody2D>().velocity.x + Random.Range(0f, 5f);
 
             gameObject.GetComponent<Rigidbody2D>().velocity =
-                new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x,
+                new Vector2( newXVelocity,
                 newYVelocity);
+
+
+            GetComponent<AudioSource>().Play();
         }
     }
 

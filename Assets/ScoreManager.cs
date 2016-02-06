@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 using MyEnumerations;
+using Pong;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -11,13 +12,15 @@ public class ScoreManager : MonoBehaviour
     public GUISkin MyGUISkin;
     public Text GameplayText;
     private static GameObject myGameManager;
+    private static BallControl myBallControl;
 
     void Awake()
     {
         myGameManager = gameObject;
+        myBallControl = GameObject.FindGameObjectWithTag("Ball").GetComponent<BallControl>();
     }
 
-    private static void ResetScore()
+    public static void ResetScore()
     {
         playerOneScore = 0;
         playerTwoScore = 0;
@@ -42,7 +45,8 @@ public class ScoreManager : MonoBehaviour
         Player? checkWinner = ScoreManager.SomeoneWonTheGame();
         if (checkWinner == null)
         {
-            myGameManager.GetComponent<GameSetup>().NextBallShot();
+            myBallControl.ResetBall();
+            myBallControl.GoBall(Const.BALL_SHOT_WAIT_TIME);
         }
         else
         {
@@ -58,12 +62,12 @@ public class ScoreManager : MonoBehaviour
 
     public static Player? SomeoneWonTheGame()
     {
-        if (playerOneScore == 2)
+        if (playerOneScore == Const.MAX_SCORE)
         {
             return Player.Player1;
         }
 
-        else if (playerTwoScore == 2)
+        else if (playerTwoScore == Const.MAX_SCORE)
         {
             return Player.Player2;
         }

@@ -15,6 +15,7 @@ public class GameSetup : MonoBehaviour
     public Transform Player1, Player2;
     public Camera MainCamera;
     private BallControl myBallControl;
+    private bool flagTryAgain;
 
 
     void Awake()
@@ -23,30 +24,28 @@ public class GameSetup : MonoBehaviour
     }
 
 
-    private static bool AskAboutTryAgain()
+    private void AskAboutTryAgain()
     {
-        bool? answer = null;
-        while (answer == null)
-        {
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                answer = true;
-            }
-            else if (Input.GetKeyDown(KeyCode.N))
-            {
-                answer = false;
-            }
 
+        flagTryAgain = true; // Teels to update method to always run this method
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            ScoreManager.ResetScore();
+            myBallControl.ResetBall();
+            myBallControl.GoBall(Const.BALL_SHOT_WAIT_TIME);
+            flagTryAgain = false;
+            GameplayText.text = "";
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            UnityUtil.Quit();
+            flagTryAgain = false;
         }
 
-        return (bool)answer;
     }
 
-    public void NextBallShot()
-    {
-        myBallControl.ResetBall();
-        myBallControl.GoBall(Const.WAIT_TIME);
-    }
+
 
 
     // In begin of scene
@@ -76,16 +75,32 @@ public class GameSetup : MonoBehaviour
 
     public void EndOfGame(Player winner)
     {
-        coroutineEndOfGame(winner);
+        StartCoroutine(coroutineEndOfGame(winner));
     }
 
     private IEnumerator coroutineEndOfGame(Player winner)
     {
         GameplayText.text = String.Format("{0} WINS", winner);
-        yield return new WaitForSeconds(Const.WAIT_TIME);
+        yield return new WaitForSeconds(Const.PLAY_AGAIN_WAIT_TIME);
         GameplayText.text = "Play Again ( Y | N )?";
+        AskAboutTryAgain();
+    }
+
+
+    void Update()
+    {
+        if (flagTryAgain)
+        {
+            AskAboutTryAgain();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnityUtil.Quit();
+        }
     }
 }
+
 
 
 

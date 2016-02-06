@@ -10,6 +10,8 @@ namespace Pong
     /// </summary>
     static class Const
     {
-        public const float WAIT_TIME = 2f ;
+        public const float BALL_SHOT_WAIT_TIME = 2f ;
+        public const float PLAY_AGAIN_WAIT_TIME = 1f;
+        public const int MAX_SCORE = 10;
     }
 }

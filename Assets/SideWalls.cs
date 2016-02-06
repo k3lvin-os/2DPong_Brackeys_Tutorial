@@ -4,18 +4,17 @@ using MyEnumerations;
 
 public class SideWalls : MonoBehaviour
 {
-    BallControl myBallControl;
 
     void Awake()
     {
         GameObject ball = GameObject.FindGameObjectWithTag("Ball");
-        myBallControl = ball.GetComponent<BallControl>();
     }
 
-    void OnTriggerExit2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col)
     {
         if (col.name.Equals("Ball"))
         {
+            gameObject.GetComponent<AudioSource>().Play();
             string wallName = transform.name;
             ScoreManager.Score(wallName);
             ScoreManager.DealtWithScore();    
