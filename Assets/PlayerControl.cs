@@ -7,10 +7,6 @@ public class PlayerControl : MonoBehaviour {
     public KeyCode MoveUp, MoveDown;
    
 
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void Update () {

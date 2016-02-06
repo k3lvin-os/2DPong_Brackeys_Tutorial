@@ -18,7 +18,7 @@ public class SideWalls : MonoBehaviour
         {
             string wallName = transform.name;
             ScoreManager.Score(wallName);
-            myBallControl.FlagResetBall = true;
+            ScoreManager.DealtWithScore();    
         }
     }
     

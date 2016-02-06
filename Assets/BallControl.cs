@@ -1,38 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MyUnitResources;
+using Pong;
 
 public class BallControl : MonoBehaviour
 {
 
     public float XForce, YForce;
     public GameObject ball;
-    public bool FlagResetBall { get; set; }
 
     void Start()
     {
-        Invoke("GoBall", 2.0f);
+        GoBall(Const.WAIT_TIME);
     }
 
-    void Update()
+    private IEnumerator WaitAndGoBall(float waitTime)
     {
-        if(FlagResetBall)
-        {
-            resetBall();
-            FlagResetBall = false;
-        }
+        yield return new WaitForSeconds(waitTime);
+        GoBall();
     }
-    
 
-    private void resetBall()
+    public void ResetBall()
     {
         ball.transform.position = new Vector3(0f, 0f, 0f);
         ball.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
-        Invoke("GoBall", 2.0f);
     }
 
+    public void GoBall(float waitTime)
+    {
+        StartCoroutine(WaitAndGoBall(waitTime));
+    }
 
-
-    void GoBall()
+    public void GoBall()
     {
         float randNumber = Random.Range(0f, 2f);
         if (randNumber <= 0.5f)
@@ -58,6 +57,5 @@ public class BallControl : MonoBehaviour
                 newYVelocity);
         }
     }
-
 
 }

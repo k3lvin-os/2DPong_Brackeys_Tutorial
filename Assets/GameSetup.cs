@@ -1,36 +1,25 @@
 ﻿using MyEnumerations;
 using MyUnitResources;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Pong;
 
 
 public class GameSetup : MonoBehaviour
 {
-    private bool _endOfGame;
-    private float counter = 0;
 
-    public Player? Winner { get; set; }
     public Text GameplayText;
     public BoxCollider2D TopWall, BottomWall, LeftWall, RightWall;
     public Transform Player1, Player2;
     public Camera MainCamera;
-    public bool EndOfGame
-    {
-        get { return _endOfGame; }
-        set
-        {
-            if (Winner != null)
-            {
-                _endOfGame = value;
-            }
-            else
-            {
-                throw new MissingReferenceException("Could not set value to EndOfGame propriety."
-                    + "See if you missed out some requirement");
-            }
-        }
+    private BallControl myBallControl;
 
+
+    void Awake()
+    {
+        myBallControl = GameObject.FindGameObjectWithTag("Ball").GetComponent<BallControl>();
     }
 
 
@@ -48,11 +37,15 @@ public class GameSetup : MonoBehaviour
                 answer = false;
             }
 
-            Debug.Log("I'm inside AskAboutTryAgain");
-
         }
 
         return (bool)answer;
+    }
+
+    public void NextBallShot()
+    {
+        myBallControl.ResetBall();
+        myBallControl.GoBall(Const.WAIT_TIME);
     }
 
 
@@ -81,43 +74,18 @@ public class GameSetup : MonoBehaviour
 
     }
 
-    private void resetGame()
+    public void EndOfGame(Player winner)
     {
-        gameObject.GetComponent<ScoreManager>().flagResetScore = true;
-        GameObject ball = GameObject.FindGameObjectWithTag("Ball");
-        BallControl myBallControl = ball.GetComponent<BallControl>();
-        myBallControl.FlagResetBall = true;
+        coroutineEndOfGame(winner);
     }
 
-    void Update()
+    private IEnumerator coroutineEndOfGame(Player winner)
     {
-        if (EndOfGame)
-        {
-            GameplayText.text = String.Format("{0} WINS!", Winner);
-            float now = 0f;
-            while (now < 5f)
-            {
-                now += Time.deltaTime;
-                Debug.Log("now = " + now);
-            }
-            GameplayText.text = ""; // test
-            /*
-            GameplayText.text = "PLAY AGAIN? ( Y | N )";
-            bool tryAgain = AskAboutTryAgain();
-            if (tryAgain)
-            {
-                resetGame();
-                EndOfGame = false;
-                Winner = null;
-            }
-            else
-            {
-                UnityUtil.Quit();
-            }
-            */
-        }
-        
-
-
+        GameplayText.text = String.Format("{0} WINS", winner);
+        yield return new WaitForSeconds(Const.WAIT_TIME);
+        GameplayText.text = "Play Again ( Y | N )?";
     }
 }
+
+
+
